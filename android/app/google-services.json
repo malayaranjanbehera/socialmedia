@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "637572033364",
+    "project_id": "spotify-b9840",
+    "storage_bucket": "spotify-b9840.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637572033364:android:b64752445e8f64f6f6b6c1",
+        "android_client_info": {
+          "package_name": "com.example.instagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637572033364-qonl3a0kl4r7me0l65nrsm9onsjoimiu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgNA-8DmO0NSnSpruH7twP_2jAyXzhmx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637572033364-cdjtis2ivgfs5jtmuoblo6tndfk1hsji.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "637572033364-egii3oo59algult7d95fln08p2cm5ol9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.newchatapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
