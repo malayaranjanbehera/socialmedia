@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:instagram/auth/auth_screen.dart';
 import 'package:instagram/firebase_options.dart';
+import 'package:instagram/screen/stay_login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ScreenUtilInit(designSize: Size(375, 812), child: AuthScreen()),
+      home: ScreenUtilInit(designSize: Size(375, 812), child: StayLoginPage()),
     );
   }
 }

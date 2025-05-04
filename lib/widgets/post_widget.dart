@@ -1,4 +1,3 @@
-
 import 'package:date_format/date_format.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,9 @@ import 'package:instagram/util/image_cached.dart';
 import 'package:instagram/widgets/comment.dart';
 import 'package:instagram/widgets/like_animation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:instagram/widgets/post_service.dart';
+
+import 'delete_post_dialog.dart';
 
 class PostWidget extends StatefulWidget {
   final snapshot;
@@ -53,17 +55,31 @@ class _PostWidgetState extends State<PostWidget> {
                 widget.snapshot['location'],
                 style: TextStyle(fontSize: 11.sp),
               ),
-              trailing: const Icon(Icons.more_horiz),
+              trailing:
+              widget.snapshot['uid'] == user
+                  ? IconButton(
+                icon: const Icon(Icons.more_horiz),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => DeletePostDialog(
+                      postId: widget.snapshot['postId'],
+                    ),
+                  );
+                },
+              )
+                  : null,
             ),
           ),
         ),
         GestureDetector(
           onDoubleTap: () {
             Firebase_Firestor().like(
-                like: widget.snapshot['like'],
-                type: 'posts',
-                uid: user,
-                postId: widget.snapshot['postId']);
+              like: widget.snapshot['like'],
+              type: 'posts',
+              uid: user,
+              postId: widget.snapshot['postId'],
+            );
             setState(() {
               isAnimating = true;
             });
@@ -74,9 +90,7 @@ class _PostWidgetState extends State<PostWidget> {
               SizedBox(
                 width: 375.w,
                 height: 375.h,
-                child: CachedImage(
-                  widget.snapshot['postImage'],
-                ),
+                child: CachedImage(widget.snapshot['postImage']),
               ),
               AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
@@ -90,13 +104,9 @@ class _PostWidgetState extends State<PostWidget> {
                       isAnimating = false;
                     });
                   },
-                  child: Icon(
-                    Icons.favorite,
-                    size: 100.w,
-                    color: Colors.red,
-                  ),
+                  child: Icon(Icons.favorite, size: 100.w, color: Colors.red),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -115,18 +125,20 @@ class _PostWidgetState extends State<PostWidget> {
                     child: IconButton(
                       onPressed: () {
                         Firebase_Firestor().like(
-                            like: widget.snapshot['like'],
-                            type: 'posts',
-                            uid: user,
-                            postId: widget.snapshot['postId']);
+                          like: widget.snapshot['like'],
+                          type: 'posts',
+                          uid: user,
+                          postId: widget.snapshot['postId'],
+                        );
                       },
                       icon: Icon(
                         widget.snapshot['like'].contains(user)
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: widget.snapshot['like'].contains(user)
-                            ? Colors.red
-                            : Colors.black,
+                        color:
+                            widget.snapshot['like'].contains(user)
+                                ? Colors.red
+                                : Colors.black,
                         size: 24.w,
                       ),
                     ),
@@ -148,39 +160,28 @@ class _PostWidgetState extends State<PostWidget> {
                               minChildSize: 0.2,
                               builder: (context, scrollController) {
                                 return Comment(
-                                    'posts', widget.snapshot['postId']);
+                                  'posts',
+                                  widget.snapshot['postId'],
+                                );
                               },
                             ),
                           );
-                       },
+                        },
                       );
                     },
-                    child: Image.asset(
-                      'images/comment.webp',
-                      height: 28.h,
-                    ),
+                    child: Image.asset('images/comment.webp', height: 28.h),
                   ),
                   SizedBox(width: 17.w),
-                  Image.asset(
-                    'images/send.jpg',
-                    height: 28.h,
-                  ),
+                  Image.asset('images/send.jpg', height: 28.h),
                   const Spacer(),
                   Padding(
                     padding: EdgeInsets.only(right: 15.w),
-                    child: Image.asset(
-                      'images/save.png',
-                      height: 28.h,
-                    ),
+                    child: Image.asset('images/save.png', height: 28.h),
                   ),
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(
-                  left: 30.w,
-                  top: 4.h,
-                  bottom: 8.h,
-                ),
+                padding: EdgeInsets.only(left: 30.w, top: 4.h, bottom: 8.h),
                 child: Text(
                   widget.snapshot['like'].length.toString(),
                   style: TextStyle(
@@ -210,8 +211,13 @@ class _PostWidgetState extends State<PostWidget> {
               Padding(
                 padding: EdgeInsets.only(left: 15.w, top: 20.h, bottom: 8.h),
                 child: Text(
-                  formatDate(widget.snapshot['time'].toDate(),
-                      [yyyy, '-', mm, '-', dd]),
+                  formatDate(widget.snapshot['time'].toDate(), [
+                    yyyy,
+                    '-',
+                    mm,
+                    '-',
+                    dd,
+                  ]),
                   style: TextStyle(fontSize: 11.sp, color: Colors.grey),
                 ),
               ),

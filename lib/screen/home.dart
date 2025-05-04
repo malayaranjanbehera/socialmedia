@@ -27,7 +27,13 @@ class _HomeScreenState extends State<HomeScreen> {
         title: SizedBox(
           width: 130.w,
           height: 35.h,
-          child: Image.asset('images/snapgram.jpg',fit: BoxFit.fitHeight,),
+          child:Center(
+            child: Text("Snapgram", style: TextStyle(
+              fontSize: 32,
+              fontFamily: 'Malaya'
+
+            ),),
+          ),
         ),
         leading: GestureDetector(
           onTap: () {
@@ -37,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
           child: Container(
-            child: Center(child: Text("AI",style: TextStyle(fontSize: 23),)),
+            child: Center(child: Image.asset('images/chatbot.avif')),
           ),
         ),
         actions: [
@@ -48,7 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 MaterialPageRoute(builder: (context) => MainPage()),
               );
             },
-            child: Icon(Icons.message_rounded, color: Colors.black, size: 25),
+            child:  Image.asset(
+              'images/message.jpg',
+              height: 40.h,
+            ),
           ),
         ],
         backgroundColor: const Color(0xffFAFAFA),

@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/auth/auth_screen.dart';
 import 'package:instagram/data/firebase_service/firestor.dart';
 import 'package:instagram/data/model/usermodel.dart';
 import 'package:instagram/screen/edit_profile_screen.dart';
 import 'package:instagram/screen/post_screen.dart';
 import 'package:instagram/util/image_cached.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:instagram/widgets/dialog_box.dart';
 
 class ProfileScreen extends StatefulWidget {
   String Uid;
@@ -36,10 +38,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   getdata() async {
-    DocumentSnapshot snap = await _firebaseFirestore
-        .collection('users')
-        .doc(_auth.currentUser!.uid)
-        .get();
+    DocumentSnapshot snap =
+        await _firebaseFirestore
+            .collection('users')
+            .doc(_auth.currentUser!.uid)
+            .get();
     following = (snap.data()! as dynamic)['following'];
     if (following.contains(widget.Uid)) {
       setState(() {
@@ -69,15 +72,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               StreamBuilder(
-                stream: _firebaseFirestore
-                    .collection('posts')
-                    .where('uid', isEqualTo: widget.Uid)
-                    .snapshots(),
+                stream:
+                    _firebaseFirestore
+                        .collection('posts')
+                        .where('uid', isEqualTo: widget.Uid)
+                        .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const SliverToBoxAdapter(
-                        child:
-                        Center(child: CircularProgressIndicator()));
+                      child: Center(child: CircularProgressIndicator()),
+                    );
                   }
                   post_lenght = snapshot.data!.docs.length;
                   return SliverGrid(
@@ -85,20 +89,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final snap = snapshot.data!.docs[index];
                       return GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PostScreen(snap.data())));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PostScreen(snap.data()),
+                            ),
+                          );
                         },
-                        child: CachedImage(
-                          snap['postImage'],
-                        ),
+                        child: CachedImage(snap['postImage']),
                       );
                     }, childCount: post_lenght),
                     gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 4,
-                      mainAxisSpacing: 4,
-                    ),
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 4,
+                          mainAxisSpacing: 4,
+                        ),
                   );
                 },
               ),
@@ -157,35 +162,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fontSize: 16.sp,
                         ),
                       ),
+                      SizedBox(width: 45),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => DialogFb1()));
+                          //logout(context);
+                        },
+                        child:Image.asset('images/logout.jpg',height: 35,)
+                      ),
                     ],
                   ),
                   Row(
                     children: [
                       SizedBox(width: 30.w),
-                      Text(
-                        'Posts',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                        ),
-                      ),
+                      Text('Posts', style: TextStyle(fontSize: 13.sp)),
                       SizedBox(width: 25.w),
-                      Text(
-                        'Followers',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                        ),
-                      ),
+                      Text('Followers', style: TextStyle(fontSize: 13.sp)),
                       SizedBox(width: 19.w),
-                      Text(
-                        'Following',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                        ),
-                      ),
+                      Text('Following', style: TextStyle(fontSize: 13.sp)),
                     ],
                   ),
                 ],
-              )
+              ),
             ],
           ),
           Padding(
@@ -233,28 +231,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: yourse ? Colors.white : Colors.blue,
                     borderRadius: BorderRadius.circular(5.r),
                     border: Border.all(
-                        color: yourse ? Colors.grey.shade400 : Colors.blue),
+                      color: yourse ? Colors.grey.shade400 : Colors.blue,
+                    ),
                   ),
-                  child: yourse
-                      ? GestureDetector(
-                      onTap: () {
-                        if (yourse) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const EditProfileScreen()),
-                          );
-                        } else {
-                          Firebase_Firestor().flollow(uid: widget.Uid);
-                          setState(() {
-                            follow = true;
-                          });
-                        }
-                      },
+                  child:
+                      yourse
+                          ? GestureDetector(
+                            onTap: () {
+                              if (yourse) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const EditProfileScreen(),
+                                  ),
+                                );
+                              } else {
+                                Firebase_Firestor().flollow(uid: widget.Uid);
+                                setState(() {
+                                  follow = true;
+                                });
+                              }
+                            },
 
-                      child: const Text('Edit Your Profile'))
-                      : const Text(
-                    'Follow',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                            child: const Text('Edit Your Profile',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+                          )
+                          : const Text(
+                            'Follow',
+                            style: TextStyle(color: Colors.white),
+                          ),
                 ),
               ),
             ),
@@ -274,15 +277,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         });
                       },
                       child: Container(
-                          alignment: Alignment.center,
-                          height: 30.h,
-                          width: 100.w,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(5.r),
-                            border: Border.all(color: Colors.grey.shade200),
-                          ),
-                          child: const Text('Unfollow')),
+                        alignment: Alignment.center,
+                        height: 30.h,
+                        width: 100.w,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(5.r),
+                          border: Border.all(color: Colors.grey.shade200),
+                        ),
+                        child: const Text('Unfollow'),
+                      ),
                     ),
                   ),
                   SizedBox(width: 8.w),
@@ -321,11 +325,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(
-            height: 5.h,
-          )
+          SizedBox(height: 5.h),
         ],
       ),
     );
   }
 }
+

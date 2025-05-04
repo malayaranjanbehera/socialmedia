@@ -4,6 +4,8 @@ import 'package:instagram/data/firebase_service/firebase_auth.dart';
 import 'package:instagram/screen/home.dart';
 import 'package:instagram/widgets/navigation.dart';
 
+import '../util/exeption.dart';
+
 class LoginScreen extends StatefulWidget {
   final VoidCallback show;
   const LoginScreen(this.show, {super.key});
@@ -33,11 +35,15 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(width: 96.w, height: 100.h),
+            SizedBox(width: 96.w, height: 70.h),
             Center(
-              child: Image.asset('images/snapgram.jpg',height: 70,),
+              child: Text("Snapgram", style: TextStyle(
+                  fontSize: 40,
+                  fontFamily: 'Malaya'
+
+              ),),
             ),
-            SizedBox(height: 120.h),
+            SizedBox(height: 80.h),
             Textfild(email, email_F, 'Email', Icons.email),
             SizedBox(height: 15.h),
             Textfild(password, password_F, 'Password', Icons.lock),
@@ -86,10 +92,42 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: InkWell(
         onTap: () async {
-          await Authentication()
-              .Login(email: email.text, password: password.text);
-         Navigator.push(context, MaterialPageRoute(builder: (context)=> Navigations_Screen()));
+          if (email.text.isEmpty || password.text.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Email and password are required."),
+                backgroundColor: Colors.green,
+              ),
+            );
+            return;
+          }
+          try {
+            await Authentication().Login(
+              email: email.text,
+              password: password.text,
+            );
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Navigations_Screen()),
+            );
+          } on exceptions catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(e.message),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Unexpected error occurred."),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
         },
+
         child: Container(
           alignment: Alignment.center,
           width: double.infinity,

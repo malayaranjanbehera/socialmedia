@@ -64,7 +64,13 @@ class _AiMainSecState extends State<AiMainSec> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Center(child: Text("AI ChartBot")),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('images/chatbot.avif',height: 80,),
+            Text("ChatBot",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)
+          ],
+        )
       ),
       body: Column(
         children: [
@@ -76,21 +82,27 @@ class _AiMainSecState extends State<AiMainSec> {
                 return ChatBubble(message: _messages[index]);
               },
               )),
-          Padding(padding: EdgeInsets.all(10),
+          Padding(padding: EdgeInsets.only(bottom: 20,left: 15),
           child: Row(
             children: [
-              Expanded(child: TextField(
+              Expanded(
+                  child: TextField(
                 controller: _textController,
                 decoration: InputDecoration(
                   hintText: "Enter message",
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(20),
                   )
                 ),
               )),
-              IconButton(
-                onPressed: ()=>_sendChartMessage(_textController.text),
-                icon: Icon(Icons.send),)
+              // IconButton(
+              //   onPressed: ()=>_sendChartMessage(_textController.text),
+              //   icon: Icon(Icons.send),),
+              SizedBox(width: 10,),
+              GestureDetector(
+                onTap: ()=>_sendChartMessage(_textController.text),
+                  child: Image.asset('images/sendlogo.jpg',height: 30,))
             ],
           ),
           )

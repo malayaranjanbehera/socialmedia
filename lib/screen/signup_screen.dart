@@ -52,9 +52,13 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             SizedBox(width: 96.w, height: 10.h),
             Center(
-              child: Image.asset('images/snapgram.jpg',height: 70,),
+              child: Text("Snapgram", style: TextStyle(
+                  fontSize: 40,
+                  fontFamily: 'Malaya'
+
+              ),),
             ),
-            SizedBox(width: 96.w, height: 70.h),
+            SizedBox(width: 96.w, height: 40.h),
             InkWell(
               onTap: () async {
                 File imagefilee = await ImagePickerr().uploadImage('gallery');
@@ -65,20 +69,22 @@ class _SignupScreenState extends State<SignupScreen> {
               child: CircleAvatar(
                 radius: 36.r,
                 backgroundColor: Colors.grey,
-                child: _imageFile == null
-                    ? CircleAvatar(
-                  radius: 34.r,
-                  backgroundImage: const AssetImage('images/person.png'),
-                  backgroundColor: Colors.grey.shade200,
-                )
-                    : CircleAvatar(
-                  radius: 34.r,
-                  backgroundImage: Image.file(
-                    _imageFile!,
-                    fit: BoxFit.cover,
-                  ).image,
-                  backgroundColor: Colors.grey.shade200,
-                ),
+                child:
+                    _imageFile == null
+                        ? CircleAvatar(
+                          radius: 34.r,
+                          child: Icon(Icons.photo),
+                          // backgroundImage: const AssetImage(
+                          //   'images/person.png',
+                          // ),
+                          // backgroundColor: Colors.grey.shade200,
+                        )
+                        : CircleAvatar(
+                          radius: 34.r,
+                          backgroundImage:
+                              Image.file(_imageFile!, fit: BoxFit.cover).image,
+                          backgroundColor: Colors.grey.shade200,
+                        ),
               ),
             ),
             SizedBox(height: 40.h),
@@ -90,12 +96,16 @@ class _SignupScreenState extends State<SignupScreen> {
             SizedBox(height: 15.h),
             Textfild(password, password_F, 'Password', Icons.lock),
             SizedBox(height: 15.h),
-            Textfild(passwordConfirme, passwordConfirme_F, 'PasswordConfirme',
-                Icons.lock),
+            Textfild(
+              passwordConfirme,
+              passwordConfirme_F,
+              'PasswordConfirme',
+              Icons.lock,
+            ),
             SizedBox(height: 15.h),
             Signup(),
             SizedBox(height: 15.h),
-            Have()
+            Have(),
           ],
         ),
       ),
@@ -109,20 +119,18 @@ class _SignupScreenState extends State<SignupScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            "Don you have account?  ",
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.grey,
-            ),
+            "Do you have account?  ",
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey),
           ),
           GestureDetector(
             onTap: widget.show,
             child: Text(
               "Login ",
               style: TextStyle(
-                  fontSize: 15.sp,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold),
+                fontSize: 15.sp,
+                color: Colors.blue,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -135,19 +143,63 @@ class _SignupScreenState extends State<SignupScreen> {
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: InkWell(
         onTap: () async {
-         try {
+          // Check for empty fields
+          if (_imageFile == null ||
+              email.text.isEmpty ||
+              username.text.isEmpty ||
+              bio.text.isEmpty ||
+              password.text.isEmpty ||
+              passwordConfirme.text.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("All fields are required."),
+                backgroundColor: Colors.green,
+              ),
+            );
+            return;
+          }
+
+          // Password match check
+          if (password.text != passwordConfirme.text) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Passwords do not match."),
+                backgroundColor: Colors.green,
+              ),
+            );
+            return;
+          }
+
+          try {
             await Authentication().Signup(
               email: email.text,
               password: password.text,
               passwordConfirme: passwordConfirme.text,
               username: username.text,
               bio: bio.text,
-              profile: _imageFile ?? File(''),
+              profile: _imageFile!,
+            );
+
+            // Navigate to home and replace login
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Navigations_Screen()),
             );
           } on exceptions catch (e) {
-            dialogBuilder(context, e.message);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(e.message),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Unexpected error occurred."),
+                backgroundColor: Colors.green,
+              ),
+            );
           }
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Navigations_Screen()));
         },
         child: Container(
           alignment: Alignment.center,
@@ -170,8 +222,12 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Padding Textfild(TextEditingController controll, FocusNode focusNode,
-      String typename, IconData icon) {
+  Padding Textfild(
+    TextEditingController controll,
+    FocusNode focusNode,
+    String typename,
+    IconData icon,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Container(
@@ -190,21 +246,17 @@ class _SignupScreenState extends State<SignupScreen> {
               icon,
               color: focusNode.hasFocus ? Colors.black : Colors.grey[600],
             ),
-            contentPadding:
-            EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 15.w,
+              vertical: 15.h,
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.r),
-              borderSide: BorderSide(
-                width: 2.w,
-                color: Colors.grey,
-              ),
+              borderSide: BorderSide(width: 2.w, color: Colors.grey),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.r),
-              borderSide: BorderSide(
-                width: 2.w,
-                color: Colors.black,
-              ),
+              borderSide: BorderSide(width: 2.w, color: Colors.black),
             ),
           ),
         ),
