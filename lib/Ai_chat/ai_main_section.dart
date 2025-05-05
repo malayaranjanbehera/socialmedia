@@ -67,8 +67,8 @@ class _AiMainSecState extends State<AiMainSec> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('images/chatbot.avif',height: 80,),
-            Text("ChatBot",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)
+            Image.asset('images/chatbot1.jpg',height: 45,),
+            Text("  ChatBot",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)
           ],
         )
       ),

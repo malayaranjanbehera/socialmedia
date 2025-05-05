@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
           child: Container(
-            child: Center(child: Image.asset('images/chatbot.avif')),
+            child: Center(child: Image.asset('images/chatbot1.jpg',height: 36,)),
           ),
         ),
         actions: [

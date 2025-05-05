@@ -34,7 +34,7 @@ class DeletePostDialog extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
             const Text(
-              "Do you want to delete this post?",
+              "Do you want to delete this post ?",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
