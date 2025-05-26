@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:instagram/data/firebase_service/firebase_auth.dart';
-import 'package:instagram/screen/home.dart';
 import 'package:instagram/widgets/navigation.dart';
 
 import '../util/exeption.dart';
@@ -153,7 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Padding(
       padding: EdgeInsets.only(left: 230.w),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+        },
         child: Text(
           'Forgot password?',
           style: TextStyle(
